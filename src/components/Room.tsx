@@ -1,6 +1,12 @@
 import { useEffect ,useRef, useState} from "react";
 import { useSocket } from "../sockets/SocketContext";
 import WebRtc from "../services/webrtc";
+import VideoCallIcon from '@mui/icons-material/VideoCall';
+import CallEndIcon from '@mui/icons-material/CallEnd';
+// import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+// import VolumeOffIcon from '@mui/icons-material/VolumeOff';
+// import MicIcon from '@mui/icons-material/Mic';
+// import MicOffIcon from '@mui/icons-material/MicOff';
 
 interface Chat {
   message:String,
@@ -25,6 +31,8 @@ function Room({
   const [isRemoteBig, setIsRemoteBig] = useState(true); 
   const [message,setMessage] = useState("");
   const [Chat, setChat] = useState<Chat[]>([]); 
+  // const [isMute,setIsMute] = useState(false);
+  // const [isMicOff,setIsMicOff] = useState(false);
 
  useEffect(()=>{
   if (localVideoRef.current && localVideoTrack) {
@@ -152,6 +160,27 @@ useEffect(() => {
       };
     }, [WebRtc]);
 
+    // useEffect(()=>{
+    //   const videoElement = remoteVideoRef.current;
+    //   if (videoElement) {
+    //     videoElement.muted = !isMute;
+    //   }
+    // },[isMute]);
+
+    // useEffect(()=>{
+    //   const videoElement = localVideoRef.current;
+    //   if (videoElement && videoElement.srcObject) {
+    //     const mediaStream = videoElement.srcObject as MediaStream;
+    //     const audioTracks = mediaStream.getAudioTracks();
+    //     if (audioTracks.length > 0) {
+    //       audioTracks.forEach((track:any) => {
+    //         track.enabled = !track.enabled;
+    //       });
+    //       setIsMicOff(!isMicOff); // Toggle mic state
+    //     }
+    //   }
+    // },[isMicOff]);
+
     // Stop remote video and clean up
   const stopRemoteVideo = () => {
     if (remoteVideoRef.current) {
@@ -234,6 +263,7 @@ useEffect(() => {
           <video
             ref={localVideoRef}
             autoPlay
+
             className="w-full h-full object-cover"
           />
         </div>
@@ -242,12 +272,26 @@ useEffect(() => {
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-4">
           {isMettingUser ? (
             <button onClick={handleCall} className="px-4 py-2 bg-blue-500 text-white rounded-md">
-              Call
+              <VideoCallIcon />
             </button>
           ) : null}
           <button onClick={handleCallEnd} className="px-4 py-2 bg-red-500 text-white rounded-md">
-            End Call
+            <CallEndIcon/>
           </button>
+          {/* {
+            isMute ? (
+              <button onClick={()=> setIsMute((prev)=> !prev)}><VolumeUpIcon/></button>
+            ) :(
+              <button onClick={()=> setIsMute((prev)=> !prev)}><VolumeOffIcon/></button>
+            )
+          }
+          {
+            isMicOff ? (
+              <button onClick={()=> setIsMicOff((prev)=> !prev)}><MicIcon/></button>
+            ) :(
+              <button onClick={()=> setIsMicOff((prev)=> !prev)}><MicOffIcon/></button>
+            )
+          } */}
         </div>
       </div>
 
